@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.SortedMap;
 
 public class CsvReader {
@@ -11,8 +12,8 @@ public class CsvReader {
  
 
 	private String arquivoCSV;
-	ArrayList<String> header = new ArrayList<String>();
-	HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+	ArrayList<String> colunas = new ArrayList<String>();
+	HashMap<Integer, ArrayList<String>> bucket = new HashMap<Integer, ArrayList<String>>();
 	
 	public CsvReader(String arquivoCSV){
 		this.arquivoCSV = arquivoCSV;
@@ -30,23 +31,27 @@ public class CsvReader {
 
 	            String[] dados = linha.split(csvDivisor);
 	            tam = dados.length;
-	            while(tam >= 1 && count <= 10) {
+	            while(tam > 0) {
 	            	if(count == 0) {
-	            		header.add(dados[dados.length-tam]);
+	            		colunas.add(dados[dados.length-tam]);
 	            		tam--;
 	            	}else {
-	            		map.putIfAbsent(header.get(dados.length-tam),new ArrayList<String>());
-	            		map.get(header.get(dados.length-tam)).add(dados[dados.length-tam]);
+	            		bucket.putIfAbsent(Integer.parseInt(dados[0]),new ArrayList<String>());
+	            		bucket.get(Integer.parseInt(dados[0])).add(dados[dados.length-tam]);
+	            		//map.putIfAbsent(header.get(dados.length-tam),new ArrayList<String>());
+	            		//map.get(header.get(dados.length-tam)).add(dados[dados.length-tam]);
 	                tam--;
 	            	 }
 	            }
 	            //System.out.println();
 	            count++;
 	        }
-	        System.out.println(header);
-	        System.out.println(map);
-	        
-	        
+	        System.out.println(colunas);
+	        /*for (Iterator it = bucket.keySet().iterator(); it.hasNext();) {
+	            Object key = it.next();
+	            System.out.println(bucket.get(key));
+	          }
+	        */
 
 	    } catch (FileNotFoundException e) {
 	        e.printStackTrace();
